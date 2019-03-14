@@ -1,5 +1,4 @@
 # StinchinStein's Bohemia Server Manager
-Arma 3\
-![alt text](https://i.imgur.com/LBemOwC.png)\
-![alt text](https://i.imgur.com/flGjpgf.png)\
-![alt text](https://i.imgur.com/CnURT13.png)\
+\
+![alt text](https://i.imgur.com/3aYaCRX.png) ![alt text](https://i.imgur.com/K5PNN7Z.png)\
+![alt text](https://i.imgur.com/C8CDakg.png)\
