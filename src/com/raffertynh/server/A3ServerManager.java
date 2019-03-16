@@ -19,6 +19,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.raffertynh.bohemiainteractive.Arma3Server;
 import com.raffertynh.bohemiainteractive.BohemiaServer;
@@ -30,7 +32,7 @@ public class A3ServerManager extends JFrame {
 	private JPanel contentPane;
 	private A3ServerManager instance;
 	
-	private JButton btnStartServer;
+	public JButton btnStartServer;
 	
 	public JTabbedPane tabbedPane;
 	
@@ -74,35 +76,33 @@ public class A3ServerManager extends JFrame {
 				}
 			}
 		});
-		btnStartServer.setBounds(449, 251, 91, 23);
+		btnStartServer.setBounds(418, 251, 122, 23);
 		contentPane.add(btnStartServer);
 		
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		/*tabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-				switch(tabbedPane.getSelectedIndex()) {
-					case 0:
-						if(a3Server.SERVER_RUNNING) 
-							btnStartServer.setText("Stop Server");
-						else 
-							btnStartServer.setText("Start Server");
-					break;
-					case 1:
-						if(dayZServer.SERVER_RUNNING) 
-							btnStartServer.setText("Stop Server");
-						else 
-							btnStartServer.setText("Start Server");
-					break;
-				}
-			}
-		});*/
 		
 		//Start after TabbedPane to auto-add to it. NULLPTR if started before.
 		addCustomServers();
 		
 		gameConsole = new ConsoleTab(this);
 
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				if(SERVERS.size() > 0 && tabbedPane.getSelectedIndex() != SERVERS.size()) {
+					btnStartServer.setEnabled(true);
+					SERVERS.get(tabbedPane.getSelectedIndex()).onTabSelect();
+				} else if(tabbedPane.getSelectedIndex() == SERVERS.size()){
+					if(SERVERS.get(prevTab).SERVER_RUNNING) {
+						btnStartServer.setText("Stop " + SERVERS.get(prevTab).getClass().getSimpleName());
+					} else {
+						btnStartServer.setEnabled(false);
+						btnStartServer.setText("No Server Running");
+					}
+				}
+			}
+		});
+		
 		tabbedPane.setBounds(10, 36, 530, 204);
 		contentPane.add(tabbedPane);
 		
@@ -125,7 +125,7 @@ public class A3ServerManager extends JFrame {
 				new A3ModManager(instance, SERVERS.get(tabbedPane.getSelectedIndex()));
 			}
 		});
-		btnNewButton_2.setBounds(351, 251, 97, 23);
+		btnNewButton_2.setBounds(320, 251, 97, 23);
 		contentPane.add(btnNewButton_2);
 
 

@@ -53,6 +53,12 @@ public class BohemiaServer extends JPanel implements Runnable {
 		serverProcess.destroy();
 	}
 	
+	public void onTabSelect() {
+		if(SERVER_RUNNING) 
+			parent.btnStartServer.setText("Stop Server");
+		else 
+			parent.btnStartServer.setText("Start Server");
+	}
 	public void updateModParameter() {
 		String tMd = "-mod=\"";
 
