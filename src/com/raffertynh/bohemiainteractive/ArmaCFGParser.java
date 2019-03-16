@@ -1,4 +1,4 @@
-package com.raffertynh.a3server;
+package com.raffertynh.bohemiainteractive;
 
 import java.io.File;
 import java.io.FileInputStream;

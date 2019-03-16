@@ -28,12 +28,12 @@ import javax.swing.table.DefaultTableModel;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 
-import com.raffertynh.a3server.A3ServerManager;
-import com.raffertynh.a3server.ArmaCFGParser;
+import com.raffertynh.bohemiainteractive.ArmaCFGParser;
+import com.raffertynh.bohemiainteractive.BohemiaServer;
 import com.raffertynh.renderer.ArmaList;
 import com.raffertynh.renderer.ArmaMod;
 import com.raffertynh.renderer.InventoryRenderer;
-import com.raffertynh.server.BohemiaServer;
+import com.raffertynh.server.A3ServerManager;
 
 public class A3WorkshopWindow extends JFrame {
 

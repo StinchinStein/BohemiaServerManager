@@ -1,4 +1,4 @@
-package com.raffertynh.a3server;
+package com.raffertynh.server;
 
 import java.io.File;
 import java.io.FileOutputStream;

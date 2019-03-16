@@ -24,13 +24,14 @@ import javax.swing.ListSelectionModel;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-import com.raffertynh.a3server.A3ServerManager;
-import com.raffertynh.a3server.ArmaCFGParser;
+import com.raffertynh.bohemiainteractive.ArmaCFGParser;
+import com.raffertynh.bohemiainteractive.BohemiaServer;
 import com.raffertynh.renderer.ArmaList;
 import com.raffertynh.renderer.ArmaMod;
 import com.raffertynh.renderer.InventoryRenderer;
-import com.raffertynh.server.BohemiaServer;
+import com.raffertynh.server.A3ServerManager;
 
 public class A3ModManager extends JFrame {
 
@@ -47,8 +48,6 @@ public class A3ModManager extends JFrame {
 	private A3WorkshopWindow workshopWindow;
 	
 	private BohemiaServer server;
-	
-	private JSONArray modList;
 	
 	public static long getFileFolderSize(File dir) {
 		long size = 0;
@@ -67,7 +66,6 @@ public class A3ModManager extends JFrame {
 	
 	public A3ModManager(final A3ServerManager parent, BohemiaServer server) {
 		workshopWindow = new A3WorkshopWindow(parent, server);
-		this.modList = server.MODS_LIST;
 		this.parent = parent;
 		this.server = server;
 		try {
@@ -81,6 +79,8 @@ public class A3ModManager extends JFrame {
 			btnSaveVehicle = new JButton("Done");
 			btnSaveVehicle.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					
+					
 					dispose();
 				}
 			});
@@ -110,12 +110,12 @@ public class A3ModManager extends JFrame {
 					boolean isSelected = !((ArmaMod) list.getModel().getElementAt(list.getSelectedIndex())).isSelected();
 					String mod = list.getModel().getElementAt(list.getSelectedIndex()).toString();
 					if(isSelected) {
-						if(!modList.contains(mod)) {
-							modList.add(list.getModel().getElementAt(list.getSelectedIndex()).toString());
+						if(!server.MODS_LIST.contains(mod)) {
+							server.MODS_LIST.add(list.getModel().getElementAt(list.getSelectedIndex()).toString());
 						}
 					} else {
-						if(modList.contains(mod)) {
-							modList.remove(list.getModel().getElementAt(list.getSelectedIndex()).toString());
+						if(server.MODS_LIST.contains(mod)) {
+							server.MODS_LIST.remove(list.getModel().getElementAt(list.getSelectedIndex()).toString());
 						}
 					}
 	    			updateModel();
@@ -133,8 +133,8 @@ public class A3ModManager extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					for(int i = 0; i < list.getModel().getSize(); i++) {
 		    			String mod = list.getModel().getElementAt(i).toString();
-		    			if(!modList.contains(mod)) {
-		    				modList.add(list.getModel().getElementAt(i).toString());
+		    			if(!server.MODS_LIST.contains(mod)) {
+		    				server.MODS_LIST.add(list.getModel().getElementAt(i).toString());
 			    		}
 		    		}
 	    			updateModel();
@@ -152,8 +152,8 @@ public class A3ModManager extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 					for(int i = 0; i < list.getModel().getSize(); i++) {
 		    			String mod = list.getModel().getElementAt(i).toString();
-		    			if(modList.contains(mod)) {
-		    				modList.remove(list.getModel().getElementAt(i).toString());
+		    			if(server.MODS_LIST.contains(mod)) {
+		    				server.MODS_LIST.remove(list.getModel().getElementAt(i).toString());
 			    		}
 		    		}
 	    			updateModel();
@@ -196,6 +196,7 @@ public class A3ModManager extends JFrame {
 			textField.setColumns(10);
 			
 			JButton btnSteamWorkshop = new JButton("Steam Workshop");
+			btnSteamWorkshop.setEnabled(false);
 			btnSteamWorkshop.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					openWorkshop();
@@ -209,6 +210,8 @@ public class A3ModManager extends JFrame {
 			setResizable(false);
 			setVisible(true);
 
+			if(server.getConfig().getParameter("MODS_ENABLED") != null) server.MODS_LIST = (JSONArray) new JSONParser().parse(server.getConfig().getParameter("MODS_ENABLED").toString());
+			System.out.println("Loaded Modlist: " + server.MODS_LIST.toJSONString());
 			if(server.getConfig().getParameter("DIRECTORY_SERVER").toString().length() > 0) {
 				refreshModList();
 			}
@@ -236,10 +239,10 @@ public class A3ModManager extends JFrame {
 	}
 	private void updateModel() {
 		//save current model to file and update it
-		/*parent.config.modsEnabled = parent.MODS_LIST;
-		parent.config.save();*/
+		server.getConfig().setParameter("MODS_ENABLED", server.MODS_LIST);
+		server.getConfig().save();
 		for(int i = 0; i < getModel().size(); i++) {
-			if(modList.contains(getModel().getElementAt(i).toString())) {
+			if(server.MODS_LIST.contains(getModel().getElementAt(i).toString())) {
 				getModel().getElementAt(i).setSelected(true);
 			} else {
 				getModel().getElementAt(i).setSelected(false);
@@ -247,7 +250,7 @@ public class A3ModManager extends JFrame {
 		}
 		list.repaint();
 		server.updateModParameter();
-		lblModList.setText("Mods (" + getModel().size() + " total | " + modList.size() + " enabled)");
+		lblModList.setText("Mods (" + getModel().size() + " total | " + server.MODS_LIST.size() + " enabled)");
 	}
 
 	private void refreshModList(String filter) {

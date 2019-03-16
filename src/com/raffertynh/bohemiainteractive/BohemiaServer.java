@@ -1,11 +1,13 @@
-package com.raffertynh.server;
+package com.raffertynh.bohemiainteractive;
+
+import java.awt.Color;
 
 import javax.swing.JPanel;
 
 import org.json.simple.JSONArray;
 
-import com.raffertynh.a3server.A3ServerManager;
-import com.raffertynh.a3server.Configuration;
+import com.raffertynh.server.A3ServerManager;
+import com.raffertynh.server.Configuration;
 
 public class BohemiaServer extends JPanel implements Runnable {
 
@@ -23,8 +25,15 @@ public class BohemiaServer extends JPanel implements Runnable {
 	public BohemiaServer(A3ServerManager parent, String sName) {
 		this.parent = parent;
 		cfg = new Configuration(sName);
+
+		this.setBackground(Color.WHITE);
+		if(parent != null) parent.tabbedPane.addTab(sName, null, this, null);
+		this.setLayout(null);
+		
 	}
-	
+
+	public void onServerStopped() {}
+	public void onServerStarted() {}
 	public void startServer(String execString) {
 		this.execString = execString;
 		thread = new Thread(this);

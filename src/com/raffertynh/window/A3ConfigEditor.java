@@ -18,7 +18,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.json.simple.JSONObject;
 
-import com.raffertynh.a3server.A3ServerManager;
+import com.raffertynh.server.A3ServerManager;
 
 public class A3ConfigEditor extends JFrame {
 

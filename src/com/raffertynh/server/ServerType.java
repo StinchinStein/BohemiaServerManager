@@ -1,4 +1,4 @@
-package com.raffertynh.a3server;
+package com.raffertynh.server;
 
 public enum ServerType {
 	ARMA_3_SERVER,
